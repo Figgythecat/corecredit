@@ -1,0 +1,13 @@
+# Cloudflare Pages configuration for the CoreWave Credit website.
+#
+# Deploy with:      npx wrangler pages deploy site
+# (run from this directory — Wrangler picks up ./functions automatically)
+#
+# Secrets are NOT stored here. Set CF_ACCOUNT_ID, CF_EMAIL_TOKEN, CONTACT_TO
+# and CONTACT_FROM in the Cloudflare dashboard:
+#   Workers & Pages -> corewave-credit -> Settings -> Variables and Secrets
+# See LAUNCH-CHECKLIST.md.
+
+name = "corewave-credit"
+pages_build_output_dir = "site"
+compatibility_date = "2026-07-01"

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Simplified mark for small sizes: no bars, no inner hairline, heavier stroke. -->
+  <defs>
+    <linearGradient id="fl" x1="26" y1="88" x2="104" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a63e0"/><stop offset=".5" stop-color="#2f8bff"/><stop offset="1" stop-color="#3fe0ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="26" fill="#060e20"/>
+  <path d="M 26 88 L 50 64 L 70 70 L 92 38" fill="none" stroke="url(#fl)"
+        stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 104 28 L 82 31 L 96 47 Z" fill="#3fe0ff"/>
+</svg>

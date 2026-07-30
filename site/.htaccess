@@ -1,0 +1,77 @@
+# CoreWave Credit — Apache configuration for cPanel / shared hosting.
+# This is the equivalent of the _headers file used on Cloudflare Pages.
+# Upload it into public_html alongside index.html.
+#
+# Note: files starting with a dot are hidden by default in cPanel File Manager.
+# Turn on Settings -> "Show Hidden Files (dotfiles)" if you can't see it.
+
+# ---------------------------------------------------------------------------
+# Custom error page
+# ---------------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# Force HTTPS
+#
+# This site collects personal information, so HTTPS is not optional.
+# Both conditions are checked so it also works on hosts that terminate SSL
+# at a proxy (where %{HTTPS} reads as "off" even on a secure request).
+#
+# If enabling this causes a redirect loop, comment out these four lines,
+# confirm your SSL certificate is active in cPanel, then re-enable.
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Security headers
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # Content-Security-Policy is deliberately left off. Enabling it now would
+  # silently block the Credit Repair Cloud signup iframe once you paste it into
+  # get-started.html, and the symptom is just "the form doesn't appear".
+  # Add the CRC domain to frame-src, then uncomment:
+  #
+  # Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; frame-src https://*.creditrepaircloud.com https://*.mycreditrepairsite.com; form-action 'self'; base-uri 'self'; object-src 'none'"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Compression — makes the pages load noticeably faster
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE image/svg+xml application/json
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Caching
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                "access plus 7 days"
+  ExpiresByType application/javascript  "access plus 7 days"
+  ExpiresByType image/svg+xml           "access plus 30 days"
+  # HTML stays uncached so edits appear immediately.
+  ExpiresByType text/html               "access plus 0 seconds"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Don't serve the Cloudflare-only config file or any stray dotfiles
+# ---------------------------------------------------------------------------
+<FilesMatch "^(_headers|\.htaccess|\.DS_Store)$">
+  Require all denied
+</FilesMatch>
+
+# Stop directory listings if an index file is ever missing.
+Options -Indexes

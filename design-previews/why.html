@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why Choose CoreWave Credit</title>
+<style>
+  :root{
+    --navy:#0b1428; --ink:#060b18; --blue:#2f8bff; --blue-deep:#0a4bc4; --cyan:#3fe0ff;
+    --steel-1:#7d8b9b; --steel-2:#c3ced9;
+    --bg:#e8eef8; --surface:#dbe6f4; --surface-2:#cedcee; --line:#cedcee; --card:#ffffff;
+    --header-bg:rgba(232,238,248,.82); --nav:#33415a; --wordmark-core:#37455a;
+    --text:#0e1830; --muted:#54637c; --radius:16px; --maxw:1160px;
+    --shadow-sm:0 1px 2px rgba(11,20,40,.06),0 4px 14px rgba(11,20,40,.05);
+    --shadow-lg:0 24px 60px -20px rgba(11,20,40,.35);
+    --font-display:"Sora","Segoe UI",system-ui,-apple-system,sans-serif;
+    --font-body:"Figtree","Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a1122; --surface:#0e1830; --surface-2:#12203c; --card:#121f3a;
+    --line:#243350; --text:#e7eefb; --muted:#9fb1cc;
+    --header-bg:rgba(10,17,34,.86); --nav:#c4d2e8; --wordmark-core:#c9d5e6;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35);
+    --shadow-lg:0 24px 60px -20px rgba(0,0,0,.65);
+  }
+  .theme-toggle{position:fixed;right:18px;bottom:18px;z-index:200;width:46px;height:46px;border-radius:50%;
+    border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;display:grid;place-items:center;
+    box-shadow:var(--shadow-lg);transition:transform .15s ease,background .2s ease}
+  .theme-toggle:hover{transform:translateY(-2px)}
+  .theme-toggle:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  .theme-toggle .sun{display:none}
+  :root[data-theme="dark"] .theme-toggle .moon{display:none}
+  :root[data-theme="dark"] .theme-toggle .sun{display:block}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;
+    -webkit-font-smoothing:antialiased;font-size:17px}
+  h1,h2,h3,h4{font-family:var(--font-display);line-height:1.1;margin:0;letter-spacing:-.02em;text-wrap:balance}
+  p{margin:0}a{color:inherit;text-decoration:none}img,svg{display:block;max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--blue)}
+  .eyebrow.on-dark{color:var(--cyan)}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;font-size:15px;
+    padding:13px 22px;border-radius:12px;border:1.5px solid transparent;cursor:pointer;
+    transition:transform .15s ease,box-shadow .15s ease,background .15s ease;white-space:nowrap}
+  .btn:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+  .btn-primary{background:linear-gradient(180deg,#3f97ff,#1f74ec);color:#fff;box-shadow:0 8px 22px -8px rgba(47,139,255,.7)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(47,139,255,.85)}
+  .btn-ghost{background:rgba(255,255,255,.06);color:#eaf1fb;border-color:rgba(180,205,255,.35)}
+  .btn-ghost:hover{background:rgba(255,255,255,.12)}
+  .btn-light{background:#fff;color:var(--navy);border-color:var(--line)}
+  .btn-light:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+  .btn-lg{padding:16px 28px;font-size:16px}
+
+  header.site{position:sticky;top:0;z-index:50;background:var(--header-bg);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:24px;height:74px}
+  .brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+  .brand .badge{width:44px;height:44px;flex:none}
+  .brand .wm{display:flex;flex-direction:column;line-height:1;gap:3px}
+  .brand .cw{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.01em}
+  .brand .cw .c{color:var(--wordmark-core)}.brand .cw .w{color:var(--blue)}
+  .brand .sub{font-family:var(--font-display);font-size:8.5px;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:var(--steel-1);padding-left:2px}
+  .menu{display:flex;align-items:center;gap:24px}
+  .menu a{font-weight:600;font-size:15px;color:var(--nav)}
+  .menu a:hover{color:var(--blue)}
+  .menu a.current{color:var(--blue)}
+  .nav-cta{display:flex;align-items:center;gap:14px}
+  .nav-cta .call{font-weight:700;color:var(--text);font-size:15px}
+  .burger{display:none;background:none;border:0;padding:8px;cursor:pointer}
+  .burger span{display:block;width:24px;height:2.5px;background:var(--text);border-radius:2px;margin:5px 0}
+  @media (max-width:980px){.menu,.nav-cta .call{display:none}.burger{display:block}}
+  .mobile-menu{display:none;border-top:1px solid var(--line);background:var(--card);padding:14px 24px 22px}
+  .mobile-menu.open{display:block}
+  .mobile-menu a{display:block;padding:11px 4px;font-weight:600;border-bottom:1px solid var(--surface-2)}
+  .mobile-menu .btn{width:100%;justify-content:center;margin-top:14px}
+
+  .page-hero{position:relative;overflow:hidden;color:#eaf1fb;text-align:center;padding:66px 24px 72px;isolation:isolate;
+    background:radial-gradient(60% 90% at 50% -10%, rgba(47,139,255,.3), transparent 62%),linear-gradient(180deg,#0c1730 0%,#0a1128 60%,#0b1428 100%)}
+  .page-hero .streaks{position:absolute;inset:0;z-index:-1;overflow:hidden;opacity:.4}
+  .page-hero .streak{position:absolute;bottom:-10%;height:120%;width:1px;transform-origin:bottom;
+    background:linear-gradient(to top,rgba(63,224,255,0),rgba(63,224,255,.6) 45%,rgba(63,224,255,0));animation:drift 10s ease-in-out infinite}
+  .page-hero .streak:nth-child(1){left:16%;transform:rotate(11deg)}
+  .page-hero .streak:nth-child(2){left:40%;transform:rotate(5deg);animation-delay:-3s;opacity:.6}
+  .page-hero .streak:nth-child(3){left:70%;transform:rotate(-7deg);animation-delay:-5s;opacity:.6}
+  .page-hero .streak:nth-child(4){left:88%;transform:rotate(-12deg);animation-delay:-2s}
+  @keyframes drift{0%,100%{opacity:.15}50%{opacity:.7}}
+  @media (prefers-reduced-motion:reduce){.page-hero .streak{animation:none}}
+  .page-hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;margin-top:12px}
+  .page-hero h1 .grad{background:linear-gradient(120deg,#8fc4ff,#3fe0ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .page-hero p{color:#b7c6de;max-width:58ch;margin:18px auto 0;font-size:clamp(16px,2vw,19px)}
+  .crumb{font-size:13px;color:#8aa0c4;font-weight:600}
+  .crumb a:hover{color:var(--cyan)}
+
+  section{padding:78px 0}
+  .sec-head{max-width:640px;margin:0 auto 46px;text-align:center}
+  .sec-head h2{font-size:clamp(28px,4vw,40px);font-weight:800;margin-top:12px}
+  .sec-head p{color:var(--muted);margin-top:14px;font-size:18px}
+
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .svc{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;
+    box-shadow:var(--shadow-sm);transition:transform .18s ease,box-shadow .18s ease}
+  .svc:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .svc .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;background:linear-gradient(160deg,#14264a,#0d1a34);color:var(--cyan)}
+  .svc h3{font-size:19px;margin-bottom:8px}.svc p{color:var(--muted);font-size:15px}
+  @media (max-width:900px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.svc-grid{grid-template-columns:1fr}}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+  .promise-list{list-style:none;padding:0;margin:22px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .promise-list li{display:flex;gap:10px;font-weight:600;font-size:15px;color:var(--text)}
+  .promise-list svg{color:var(--blue);flex:none;margin-top:3px}
+  .why-visual{background:linear-gradient(165deg,#0c1730,#0a1128);border-radius:20px;padding:30px;color:#dfe9f7;box-shadow:var(--shadow-lg)}
+  .sc-label{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#8aa0c4;font-weight:700}
+  @media (max-width:860px){.split{grid-template-columns:1fr;gap:34px}.promise-list{grid-template-columns:1fr}}
+
+  .cta-band{position:relative;overflow:hidden;color:#eaf1fb;text-align:center;background:linear-gradient(120deg,#0a4bc4,#2f8bff 60%,#1f74ec)}
+  .cta-band::after{content:"";position:absolute;inset:0;opacity:.25;background:radial-gradient(60% 100% at 50% 0%,rgba(63,224,255,.6),transparent 70%)}
+  .cta-band .wrap{position:relative}
+  .cta-band h2{font-size:clamp(28px,4vw,42px);font-weight:800}
+  .cta-band p{color:#dbe9ff;margin:14px auto 28px;max-width:52ch;font-size:18px}
+
+  footer.site{background:var(--ink);color:#9fb1cc;font-size:14.5px}
+  .foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;padding:64px 0 40px}
+  .foot-brand .cw{font-family:var(--font-display);font-weight:800;font-size:22px}
+  .foot-brand .cw .c{color:#cdd8e6}.foot-brand .cw .w{color:var(--blue)}
+  .foot-brand p{margin-top:14px;max-width:34ch;color:#7f92b0}
+  .foot-col h4{font-family:var(--font-display);color:#dbe6f4;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+  .foot-col a{display:block;padding:6px 0;color:#9fb1cc}.foot-col a:hover{color:var(--cyan)}
+  .disclosure{border-top:1px solid #16233d;padding:26px 0;color:#6d80a0;font-size:12.5px;line-height:1.7}
+  .foot-bottom{border-top:1px solid #16233d;padding:20px 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#6d80a0;font-size:13px}
+  @media (max-width:860px){.foot-top{grid-template-columns:1fr 1fr;gap:32px}}
+  @media (max-width:520px){.foot-top{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="g-ring" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f1fa"/><stop offset=".35" stop-color="#93a3b5"/><stop offset=".62" stop-color="#4a5a6e"/><stop offset="1" stop-color="#c3ced9"/></linearGradient>
+  <linearGradient id="g-line" x1="30" y1="82" x2="100" y2="30" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1a63e0"/><stop offset=".55" stop-color="#2f8bff"/><stop offset="1" stop-color="#3fe0ff"/></linearGradient>
+  <linearGradient id="g-bars" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#38507e"/><stop offset="1" stop-color="#2f8bff"/></linearGradient>
+  <radialGradient id="g-node" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#eafaff"/><stop offset=".45" stop-color="#3fe0ff"/><stop offset="1" stop-color="#1f7bec"/></radialGradient>
+  <filter id="f-glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <symbol id="chart-badge" viewBox="0 0 128 128">
+    <circle cx="64" cy="64" r="60" fill="#060e20"/><circle cx="64" cy="64" r="60" fill="none" stroke="url(#g-ring)" stroke-width="3.2"/>
+    <circle cx="64" cy="64" r="55" fill="none" stroke="#1e3a6b" stroke-width="1"/>
+    <g opacity=".5"><rect x="30" y="76" width="12" height="20" rx="3" fill="url(#g-bars)"/><rect x="48" y="64" width="12" height="32" rx="3" fill="url(#g-bars)"/><rect x="66" y="52" width="12" height="44" rx="3" fill="url(#g-bars)"/><rect x="84" y="40" width="12" height="56" rx="3" fill="url(#g-bars)"/></g>
+    <path d="M 30 82 L 48 66 L 66 70 L 84 48 L 96 36" fill="none" stroke="url(#g-line)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <g filter="url(#f-glow)"><path d="M 103 29 L 88 31 L 98 43 Z" fill="url(#g-node)"/></g>
+  </symbol>
+</defs></svg>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="home.html">
+      <svg class="badge" viewBox="0 0 128 128" aria-hidden="true"><use href="#chart-badge"/></svg>
+      <span class="wm"><span class="cw"><span class="c">CORE</span><span class="w">WAVE</span></span><span class="sub">Credit</span></span>
+    </a>
+    <nav class="menu">
+      <a href="home.html#how">How it works</a>
+      <a href="home.html#services">Services</a>
+      <a href="why.html" class="current" aria-current="page">Why Us</a>
+      <a href="home.html#pricing">Pricing</a>
+      <a href="home.html#faq">FAQ</a>
+      <a href="home.html#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#get-started">Get Started</a>
+    </div>
+    <button class="burger" aria-label="Menu" aria-expanded="false" onclick="var m=document.getElementById('mm');var o=m.classList.toggle('open');this.setAttribute('aria-expanded',o)"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mm">
+    <a href="home.html#how">How it works</a>
+    <a href="home.html#services">Services</a>
+    <a href="why.html">Why Us</a>
+    <a href="home.html#pricing">Pricing</a>
+    <a href="home.html#faq">FAQ</a>
+    <a href="home.html#contact">Contact</a>
+    <a class="btn btn-primary" href="#get-started">Get Started</a>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="streaks"><span class="streak"></span><span class="streak"></span><span class="streak"></span><span class="streak"></span></div>
+  <div class="wrap">
+    <p class="crumb"><a href="home.html">Home</a> &nbsp;/&nbsp; Why Us</p>
+    <span class="eyebrow on-dark" style="display:block;margin-top:14px">Why CoreWave</span>
+    <h1>Why Choose <span class="grad">CoreWave Credit?</span></h1>
+    <p>Repairing your credit is personal. We pair a modern, secure process with real human support — so you always know what's happening, and why. Here's what sets us apart.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Built around you</span><h2>Five reasons clients trust us</h2>
+      <p>The details that make working with CoreWave Credit feel different.</p></div>
+    <div class="svc-grid">
+      <div class="svc"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a6 6 0 0 1 12 0v1"/></svg></div>
+        <h3>Personalized Service</h3><p>Every credit situation is different. We build a strategy around your specific reports, goals, and timeline — never a one‑size‑fits‑all script.</p></div>
+      <div class="svc"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><path d="M9 11l2 2 4-4"/></svg></div>
+        <h3>Secure Client Portal</h3><p>Access your account anytime. Track disputes, updates, and progress online, 24/7, with bank‑level encryption protecting your information.</p></div>
+      <div class="svc"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
+        <h3>Monthly Progress Updates</h3><p>You're never left guessing. We share clear updates every month, so you always know exactly what's happening and what comes next.</p></div>
+      <div class="svc"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Transparent Communication</h3><p>Straight answers and honest expectations from day one. No hidden fees, no false promises, no runaround.</p></div>
+      <div class="svc"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+        <h3>Dedicated Support</h3><p>A real team that's in your corner. Reach out whenever you have a question and get thoughtful, human help — not a runaround.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--surface)">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Our promise</span>
+      <h2 style="font-size:clamp(26px,3.6vw,38px);font-weight:800;margin-top:12px">Honest work, clearly explained</h2>
+      <p style="color:var(--muted);margin-top:16px">Credit repair is a regulated service, and we take that seriously. We'll always be upfront about what we can and can't do, we never guarantee specific results, and you're free to cancel anytime. Our job is to give you an organized, lawful process — and keep you informed every step of the way.</p>
+      <ul class="promise-list">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> No false promises</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> No long‑term contracts</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Cancel anytime</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> You're always informed</li>
+      </ul>
+    </div>
+    <div class="why-visual">
+      <div class="sc-label">What clients focus on</div>
+      <div style="font-family:var(--font-display);font-weight:800;font-size:26px;color:#fff;margin:6px 0 20px">Progress you can watch</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;color:#b7c6de;margin-bottom:6px"><span>Payment history</span><span>Improving</span></div>
+          <div style="height:8px;background:#1a2b4d;border-radius:99px"><div style="width:82%;height:100%;background:linear-gradient(90deg,#2f8bff,#3fe0ff);border-radius:99px"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;color:#b7c6de;margin-bottom:6px"><span>Credit utilization</span><span>On track</span></div>
+          <div style="height:8px;background:#1a2b4d;border-radius:99px"><div style="width:64%;height:100%;background:linear-gradient(90deg,#2f8bff,#3fe0ff);border-radius:99px"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;color:#b7c6de;margin-bottom:6px"><span>Report accuracy</span><span>Under review</span></div>
+          <div style="height:8px;background:#1a2b4d;border-radius:99px"><div style="width:48%;height:100%;background:linear-gradient(90deg,#2f8bff,#3fe0ff);border-radius:99px"></div></div></div>
+      </div>
+      <p style="color:#7d8fb0;font-size:12px;margin-top:20px">Illustrative — for design only.</p>
+    </div>
+  </div>
+</section>
+
+<section id="get-started" class="cta-band">
+  <div class="wrap" style="padding:76px 0">
+    <span class="eyebrow on-dark" style="color:#d6ecff">Ready when you are</span>
+    <h2 style="margin-top:12px">See the CoreWave difference for yourself</h2>
+    <p>Create your account and sign up securely online. On the live site, your Credit Repair Cloud signup &amp; payment form appears right here.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-light btn-lg" href="#" onclick="return false">Get Started Today →</a>
+      <a class="btn btn-ghost btn-lg" href="home.html#contact" style="border-color:rgba(255,255,255,.6);color:#fff">Free consultation</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot-top">
+    <div class="foot-brand">
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:6px">
+        <svg style="width:38px;height:38px" viewBox="0 0 128 128" aria-hidden="true"><use href="#chart-badge"/></svg>
+        <span class="cw"><span class="c">CORE</span><span class="w">WAVE</span> <span style="font-size:12px;letter-spacing:.3em;color:var(--steel-1)">CREDIT</span></span>
+      </div>
+      <p>Helping people understand, challenge, and rebuild their credit — with an honest, guided process.</p>
+    </div>
+    <div class="foot-col"><h4>Company</h4><a href="home.html">Home</a><a href="home.html#services">Services</a><a href="why.html">Why Us</a><a href="home.html#pricing">Pricing</a></div>
+    <div class="foot-col"><h4>Get started</h4><a href="#get-started">Sign up online</a><a href="home.html#contact">Free consultation</a><a href="#">Client login</a></div>
+    <div class="foot-col"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Credit Repair Disclosure</a><a href="#">Your rights (CROA)</a></div>
+  </div>
+  <div class="wrap disclosure">
+    <strong style="color:#9fb1cc">Important disclosure:</strong> CoreWave Credit is a credit repair organization. You have the right to dispute inaccurate information in your credit report by contacting the credit bureaus directly, at no cost to you. We do not guarantee any specific results, and results vary based on your individual situation. You may cancel your service at any time without penalty. Nothing on this site is legal or financial advice. Placeholder content shown for design preview.
+  </div>
+  <div class="wrap foot-bottom"><span>© 2026 CoreWave Credit. All rights reserved.</span><span>corewavecredit.com</span></div>
+</footer>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+  <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+  <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<script>
+  (function(){
+    var root=document.documentElement, btn=document.getElementById('themeToggle');
+    try{var saved=localStorage.getItem('cw-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+    btn.addEventListener('click',function(){
+      var next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+      root.setAttribute('data-theme',next);
+      try{localStorage.setItem('cw-theme',next);}catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://corewavecredit.com/sitemap.xml

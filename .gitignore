@@ -1,0 +1,25 @@
+# Build artifact — regenerated from site/ on demand, no reason to version a binary
+# that changes on every edit. Rebuild with:
+#   cd site && zip -rq ../corewave-site.zip .
+corewave-site.zip
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Never commit these if they ever appear
+.env
+.env.*
+*.pem
+*.key
+.ftpconfig
+sftp-config.json
+
+# Wrangler's local cache. Contains whichever Cloudflare account the CLI was last
+# logged into — on this machine that was somebody else's, so it must never be
+# committed. Pure cache; regenerated on demand.
+.wrangler/

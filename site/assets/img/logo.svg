@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="CoreWave Credit">
+  <defs>
+    <linearGradient id="g-ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9f1fa"/><stop offset=".35" stop-color="#93a3b5"/>
+      <stop offset=".62" stop-color="#4a5a6e"/><stop offset="1" stop-color="#c3ced9"/>
+    </linearGradient>
+    <linearGradient id="g-line" x1="30" y1="82" x2="100" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a63e0"/><stop offset=".55" stop-color="#2f8bff"/><stop offset="1" stop-color="#3fe0ff"/>
+    </linearGradient>
+    <linearGradient id="g-bars" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38507e"/><stop offset="1" stop-color="#2f8bff"/>
+    </linearGradient>
+    <radialGradient id="g-node" cx=".5" cy=".4" r=".7">
+      <stop offset="0" stop-color="#eafaff"/><stop offset=".45" stop-color="#3fe0ff"/><stop offset="1" stop-color="#1f7bec"/>
+    </radialGradient>
+    <filter id="f-glow" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="64" cy="64" r="60" fill="#060e20"/>
+  <circle cx="64" cy="64" r="60" fill="none" stroke="url(#g-ring)" stroke-width="3.2"/>
+  <circle cx="64" cy="64" r="55" fill="none" stroke="#1e3a6b" stroke-width="1"/>
+  <g opacity=".5">
+    <rect x="30" y="76" width="12" height="20" rx="3" fill="url(#g-bars)"/>
+    <rect x="48" y="64" width="12" height="32" rx="3" fill="url(#g-bars)"/>
+    <rect x="66" y="52" width="12" height="44" rx="3" fill="url(#g-bars)"/>
+    <rect x="84" y="40" width="12" height="56" rx="3" fill="url(#g-bars)"/>
+  </g>
+  <path d="M 30 82 L 48 66 L 66 70 L 84 48 L 96 36" fill="none" stroke="url(#g-line)"
+        stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g filter="url(#f-glow)"><path d="M 103 29 L 88 31 L 98 43 Z" fill="url(#g-node)"/></g>
+</svg>
