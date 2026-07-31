@@ -5,6 +5,10 @@ hosting you already pay for ($19.95/month).
 
 Steps 1–3 put the site online. Steps 4–6 make it able to take clients and money.
 
+**Fastest path to taking money:** the signup flow and both PayPal subscription buttons
+are wired. What's left is step 4b — four values in `site/cw-config.php` so payments can
+be confirmed rather than assumed.
+
 ---
 
 ## Where things are
@@ -20,19 +24,28 @@ corecredit/
 │   ├── pricing.html         Pricing
 │   ├── faq.html             FAQ
 │   ├── contact.html         Contact
-│   ├── get-started.html     Get Started  ← the CRC signup form goes here
+│   ├── get-started.html     Get Started  ← intake form + plan picker + payment toast
+│   ├── thank-you.html       Where PayPal sends people back to
 │   ├── privacy.html         Privacy Policy
 │   ├── terms.html           Terms of Service
 │   ├── disclosure.html      Credit Repair Disclosure + CROA rights
 │   ├── 404.html
 │   ├── contact.php          Contact form handler (this is the one your host uses)
+│   ├── enroll.php           Signup handler — emails you every new enrolment
+│   ├── paypal-webhook.php   PayPal calls this; emails you when payment is confirmed
+│   ├── cw-config.php        ← inbox address + PayPal credentials live here
+│   ├── cw-lib.php           Shared helpers for the two files above
 │   ├── .htaccess            HTTPS redirect, security headers, compression, 404 page
 │   ├── robots.txt / sitemap.xml
 │   ├── _headers             Cloudflare-only; harmless here, blocked by .htaccess
-│   └── assets/{css,js,img}
+│   └── assets/{css,js,img}  assets/js/enroll.js ← your PayPal links go here
 ├── functions/api/contact.js Cloudflare-only alternative to contact.php — ignore for now
 └── LAUNCH-CHECKLIST.md      this file
 ```
+
+Signups are also written as small JSON files to a `cw-enrollments` folder **one level
+above `public_html`**, so the payment email can quote the person's details. They're
+deleted automatically after 90 days and are not reachable from the web.
 
 Preview locally before uploading:
 
@@ -101,7 +114,7 @@ cd /home/sean/Desktop/corecredit && grep -rn "TODO:" site/
 | `TODO:PHONE` | Real business phone — change both the `tel:` link and the visible text. Currently the obviously-fake `(555) 012-3456`. | contact.html, get-started.html |
 | `TODO:EMAIL` | Inbox for enquiries. Also set `$CONTACT_TO` at the top of **contact.php**. | contact.html, contact.php, privacy.html, terms.html |
 | `TODO:HOURS` | Real business hours + time zone | contact.html |
-| `TODO:CRC-EMBED` | The signup form — see step 4 | get-started.html |
+| `TODO:PAYPAL` | PayPal API secret + webhook id, so payments can be confirmed — see step 4b. (The subscription buttons themselves are already done.) | cw-config.php |
 | `TODO:PORTAL` | Your CRC client portal URL — appears in every footer as "Client login" | all pages, get-started.html |
 | `TODO:STORY` | The real story: when you started, who you are, where you're based | about.html |
 | `TODO:LEGAL-NAME` | Registered business name. Left off the public pages at your request — but CROA requires a real business identity in the **client contract**, so this still has to be settled before you take money. | disclosure.html, terms.html |
@@ -124,13 +137,16 @@ cd /home/sean/Desktop/corecredit/site && rm -f ../corewave-site.zip && zip -rq .
 and bad for updates — without a change to the URL, returning visitors keep the old
 file for a week and your fix appears not to have worked.
 
-Every page links the assets as `site.css?v=2` and `site.js?v=2`. After editing either
-file, increment that number across all pages:
+Pages link the assets as `site.css?v=5`, `site.js?v=2` and `enroll.js?v=1`. After
+editing any of them, increment that number across all pages:
 
 ```bash
 cd /home/sean/Desktop/corecredit/site
-perl -i -pe 's/site\.css\?v=\d+/site.css?v=3/g; s/site\.js\?v=\d+/site.js?v=3/g' *.html
+perl -i -pe 's/site\.css\?v=\d+/site.css?v=6/g; s/site\.js\?v=\d+/site.js?v=3/g; s/enroll\.js\?v=\d+/enroll.js?v=2/g' *.html
 ```
+
+**`assets/js/enroll.js` is the file holding your PayPal links** — so this matters most
+there. Bump it or returning visitors keep using the old links for a week.
 
 Then re-upload the HTML as well as the changed asset. HTML itself is set to
 `max-age=0`, so pages always update immediately — it's only CSS and JS that need this.
@@ -226,24 +242,89 @@ the `.htaccess` forces HTTPS, so it must be working.
 
 ---
 
-## 4. Get the Credit Repair Cloud signup form in
+## 4. Switch the signup flow on (PayPal)
 
-**This is the step that turns a website into a business.** Until it's done, the Get
-Started page tells visitors to call or email instead.
+**This is the step that turns a website into a business.** The flow itself is built:
 
-1. Log in to Credit Repair Cloud at **`app.creditrepaircloud.com`** — not
-   `secure.mycreditrepairsite.com`, which is only your own subscription billing.
-2. Look under **Settings** for the signup/lead form section. Depending on plan it's
-   called **Web Leads**, **Sign Up Forms**, **Web Form**, or **Sign Up Links**.
-3. Set the form up with your two plans — Individual $75/mo, Couples $125/mo.
-4. Copy either the **embed code** or the **hosted link**.
-5. In `site/get-started.html`, find `TODO:CRC-EMBED` and:
-   - **Embed code:** replace the whole `<div class="embed-placeholder">…</div>` with it,
-     keeping the surrounding `<div class="embed-frame">` so it picks up the card styling.
-   - **Hosted link only:** don't paste an iframe — point the Get Started buttons at that
-     URL instead. Send me the link and I'll wire it up properly.
-6. While you're in there, grab your **client portal URL** for the `TODO:PORTAL` spots.
-7. Re-zip, re-upload, then **test by enrolling yourself** and confirming payment lands.
+```
+Get Started  →  intake form  →  pick a plan  →  payment toast  →  PayPal
+                     ↓                              ↓                ↓
+              email to you              email to you        thank-you.html
+           "NEW SIGNUP (pending)"      (only once paid)   "PAYMENT VERIFIED"
+```
+
+Every signup emails you **before** payment, so you keep the lead even if they never
+pay. What's missing is your PayPal links and credentials.
+
+### 4a. ✅ DONE — subscription buttons wired in (2026-07-30)
+
+Your two PayPal subscription plans are live in `site/assets/js/enroll.js`:
+
+| Plan | Price | PayPal plan id |
+|---|---|---|
+| Individual | $75.00/month | `P-8EE17580V49700728NJVZINQ` |
+| Couples | $125.00/month | `P-56S49089GP0397414NJVZKDQ` |
+
+The payment toast renders PayPal's real **Subscribe** button rather than a plain link,
+which buys three things a link can't: the subscription carries your `CW-XXXXXX`
+reference as `custom_id`, PayPal's checkout is prefilled with the name and email they
+just typed, and PayPal tells the page the moment the subscriber approves — which
+triggers the "PAYPAL APPROVED" email and sends them to the thank-you page.
+
+The PayPal script is only fetched when the toast opens, so visitors who never enrol are
+never handed to PayPal. If it fails to load, the toast falls back to a plain subscribe
+link to the same plan.
+
+**The client id in `enroll.js` is public** — it's the half PayPal expects in page source.
+The secret is a different value and belongs only in `cw-config.php`, below.
+
+Changing a price means creating a **new** plan in PayPal — plans can't be edited once
+they have subscribers — then swapping the `P-…` id in `enroll.js` and bumping
+`enroll.js?v=` on `get-started.html`.
+
+### 4b. ← **THIS IS THE REMAINING STEP.** Turn on payment confirmation
+
+Right now you'll hear that someone *approved* a subscription in their browser. You
+won't hear from PayPal itself that the money actually settled, and you won't hear about
+renewals, failed payments, or cancellations at all.
+
+1. **developer.paypal.com → Apps & Credentials → Live.** Open the app whose client id
+   starts `AUA-QAgtZuQufDd…` — that's the one your subscribe buttons already use.
+2. Copy the **Client ID** and **Secret** into `site/cw-config.php`.
+3. In that same app, **Add Webhook**:
+   - URL: `https://corewavecredit.com/paypal-webhook.php`
+   - Events: *Payment capture completed*, *Payment sale completed*,
+     *Billing subscription activated*, *Billing subscription cancelled*,
+     *Payment capture refunded*
+4. Copy the **Webhook ID** it gives you into `cw-config.php` as well.
+5. Use PayPal's **Simulate webhook** button and confirm an email arrives.
+
+Until steps 2 and 4 are done, `paypal-webhook.php` still emails you but marks the
+subject **UNVERIFIED** — because without the credentials it cannot tell PayPal apart
+from anyone else who finds the URL. Don't treat those as confirmation of payment.
+
+### 4c. Test it properly
+
+1. Re-zip, re-upload.
+2. Enrol yourself and subscribe to the real $75 plan. You should get **three** emails:
+   - "NEW SIGNUP (payment pending)" — the instant you pick a plan
+   - "PAYPAL APPROVED" — when you finish PayPal's checkout
+   - "PAYMENT VERIFIED" — from PayPal itself, once 4b is done
+3. Cancel that subscription in PayPal — you should get a "Subscription CANCELLED" email.
+4. While you're in Credit Repair Cloud, grab your **client portal URL** for the
+   `TODO:PORTAL` spots.
+
+### ⚠️ Two things to check before you rely on this
+
+- **PayPal restricts credit repair.** Their Acceptable Use Policy lists credit repair
+  and debt settlement among prohibited or restricted activities, and accounts do get
+  frozen — with the balance held. Call PayPal, describe the business honestly, and get
+  their answer before you route real money through it. If they say no, Stripe and Square
+  have the same restriction; the usual answer is a high-risk merchant account.
+- **CROA and advance fees.** Charging monthly before the work is performed is how the
+  industry operates, but §1679b(b) restricts payment before services are fully
+  performed. This is on the list in step 6 for your attorney — it applies to the payment
+  flow you just switched on, not only to the wording on the legal pages.
 
 ---
 
@@ -259,7 +340,10 @@ to the spam folder, and some hosts reject it outright. Create it first:
 1. Open `site/contact.php` and set the two values at the top:
    - `$CONTACT_TO` — where enquiries should land (e.g. `webshowmedia@gmail.com`)
    - `$CONTACT_FROM` — the address you just created, e.g. `forms@corewavecredit.com`
-2. Re-zip and re-upload.
+2. Open `site/cw-config.php` and set the same two values there — that file feeds the
+   **enrolment and payment** emails, and it's deliberately separate so a change to one
+   never silently breaks the other.
+3. Re-zip and re-upload.
 3. **Submit the form yourself and confirm the email arrives.** Check spam too.
 4. If nothing arrives, look at cPanel → *Errors* / *Track Delivery*. Shared-host
    `mail()` is unreliable on some hosts — if yours is one, the fix is to send through
@@ -308,8 +392,13 @@ Also worth doing:
 - **No testimonials or stats** — see above.
 - **No analytics** — no tracking cookies are set. If you add any, `privacy.html` must
   be updated to disclose it.
-- **No Content-Security-Policy** — written and commented out in `.htaccess`, because
-  enabling it now would silently block the CRC signup iframe. Turn it on after step 4.
+- **No Content-Security-Policy** — written and commented out in `.htaccess`. The
+  enrolment flow links out to PayPal rather than embedding it, so the policy as written
+  should work; it stays off until someone tests it on the live site.
+- **No card details ever touch this site** — payment happens on PayPal's own pages. The
+  site stores a name, email, phone, optional state, and the plan chosen. The intake form
+  deliberately does *not* ask for a Social Security number; that belongs in the
+  encrypted client portal, not in an email to Gmail.
 - **Fonts load from Google Fonts** — normal and fine; self-hosting would be marginally
   faster and more private if you ever care.
 - **`_headers` and `functions/`** are Cloudflare-only leftovers. Harmless — keep them

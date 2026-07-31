@@ -19,6 +19,12 @@ Thumbs.db
 .ftpconfig
 sftp-config.json
 
+# Signup records written by enroll.php — real names, emails, and phone numbers.
+# On the server these live above public_html; running the site locally would put
+# them here instead. Committing one to a public repo would be a real breach.
+cw-enrollments/
+site/cw-enrollments/
+
 # Wrangler's local cache. Contains whichever Cloudflare account the CLI was last
 # logged into — on this machine that was somebody else's, so it must never be
 # committed. Pure cache; regenerated on demand.

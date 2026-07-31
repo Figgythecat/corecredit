@@ -8,22 +8,21 @@
   X-Content-Type-Options: nosniff
   # Send the origin but not the full path to other sites.
   Referrer-Policy: strict-origin-when-cross-origin
-  # We don't need any of these device APIs.
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  # We don't need any of these device APIs. payment= has to allow PayPal, whose
+  # subscribe button renders in an iframe from www.paypal.com.
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), usb=(), payment=(self "https://www.paypal.com")
   # Force HTTPS for a year, including subdomains.
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 # ---------------------------------------------------------------------------
 # Content-Security-Policy is deliberately NOT enabled yet.
 #
-# A CSP would block the Credit Repair Cloud enrolment iframe the moment you
-# paste it into get-started.html, and the failure looks like "the signup form
-# just doesn't appear" — a bad thing to debug while losing leads.
+# The line below already allows the PayPal SDK, which the enrolment page loads
+# to render the subscribe button. Enable it only when someone can immediately
+# test a real signup: the failure mode is a checkout button that silently never
+# appears — a bad thing to debug while losing leads.
 #
-# Once the CRC embed is in place and working, add its domain to frame-src and
-# uncomment the line below. Then test the Get Started page before walking away.
-#
-#  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; frame-src https://*.creditrepaircloud.com https://*.mycreditrepairsite.com; form-action 'self'; base-uri 'self'; object-src 'none'
+#  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.paypalobjects.com; connect-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; frame-src https://www.paypal.com https://www.sandbox.paypal.com; form-action 'self' https://www.paypal.com; base-uri 'self'; object-src 'none'
 # ---------------------------------------------------------------------------
 
 # Fingerprint-free assets, so cache them but let revalidation happen.

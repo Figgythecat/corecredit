@@ -34,15 +34,19 @@ ErrorDocument 404 /404.html
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+  # payment= has to allow PayPal: the subscribe button renders in an iframe from
+  # www.paypal.com, and a bare payment=() can stop checkout opening there.
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), usb=(), payment=(self \"https://www.paypal.com\")"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
-  # Content-Security-Policy is deliberately left off. Enabling it now would
-  # silently block the Credit Repair Cloud signup iframe once you paste it into
-  # get-started.html, and the symptom is just "the form doesn't appear".
-  # Add the CRC domain to frame-src, then uncomment:
+  # Content-Security-Policy is deliberately left off until someone tests it on
+  # the live site. The line below already allows the PayPal SDK — if you enable
+  # it, load the Get Started page and complete a real signup before walking
+  # away, because the failure mode is a checkout button that silently never
+  # appears. If you ever embed a Credit Repair Cloud form, add its domain to
+  # frame-src too.
   #
-  # Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; frame-src https://*.creditrepaircloud.com https://*.mycreditrepairsite.com; form-action 'self'; base-uri 'self'; object-src 'none'"
+  # Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.paypalobjects.com; connect-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; frame-src https://www.paypal.com https://www.sandbox.paypal.com https://*.creditrepaircloud.com https://*.mycreditrepairsite.com; form-action 'self' https://www.paypal.com; base-uri 'self'; object-src 'none'"
 </IfModule>
 
 # ---------------------------------------------------------------------------
@@ -70,6 +74,22 @@ ErrorDocument 404 /404.html
 # Don't serve the Cloudflare-only config file or any stray dotfiles
 # ---------------------------------------------------------------------------
 <FilesMatch "^(_headers|\.htaccess|\.DS_Store)$">
+  Require all denied
+</FilesMatch>
+
+# cw-config.php holds the PayPal API secret and cw-lib.php is include-only.
+# Normally PHP would execute them and reveal nothing, but if PHP is ever
+# disabled or misconfigured the server would hand out the source. Blocking them
+# costs nothing: enroll.php and paypal-webhook.php include them from disk.
+<FilesMatch "^(cw-config|cw-lib)\.php$">
+  Require all denied
+</FilesMatch>
+
+# Signup records: enroll.php keeps them ABOVE public_html where the web server
+# can't serve them at all. If your host won't allow that it falls back to a
+# cw-enrollments folder here and drops its own deny-all .htaccess inside —
+# a <Directory> block can't be used from this file, so that is how it's done.
+<FilesMatch "^CW-[A-Z0-9]+\.json$">
   Require all denied
 </FilesMatch>
 

@@ -339,6 +339,16 @@ details a{color:var(--blue);font-weight:600}
 .callout h3{margin:0 0 8px;font-size:17px}
 .callout p{margin:0;font-size:15px}
 
+/* The legal pages carry one statement each, so it is set as the page's whole
+   body — larger than prose copy, full contrast, nothing competing with it. */
+.legal-statement{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:46px 50px;box-shadow:var(--shadow-sm)}
+.legal-statement::before{content:"";position:absolute;inset:0 0 auto;height:3px;
+  background:linear-gradient(90deg,var(--blue-deep),var(--blue) 45%,var(--cyan))}
+.legal-statement p{color:var(--text);font-size:19px;line-height:1.68;margin:0}
+.legal-statement p + p{margin-top:18px}
+@media (max-width:600px){.legal-statement{padding:32px 24px}.legal-statement p{font-size:17px}}
+
 /* ---------- contact ---------- */
 .contact-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:start}
 @media (max-width:900px){.contact-grid{grid-template-columns:1fr;gap:34px}}
@@ -388,6 +398,125 @@ form.cw .btn{width:100%;justify-content:center}
   background:var(--surface)}
 .embed-placeholder h3{font-size:19px;margin-bottom:10px}
 .embed-placeholder p{color:var(--muted);font-size:15.5px;max-width:46ch;margin:0 auto 20px}
+
+/* ---------- enrolment wizard (get-started) ---------- */
+.wizard{max-width:720px;margin:0 auto}
+
+/* Step indicator. Numbers rather than a progress bar, because the whole point
+   is telling someone how much is left before they are asked for money. */
+ol.wz-track{display:flex;align-items:center;gap:8px;margin:0 0 26px;padding:0;list-style:none}
+.wz-track li{display:flex;align-items:center;gap:9px;flex:1 1 auto;min-width:0}
+.wz-track li:last-child{flex:0 0 auto}
+.wz-track li:not(:last-child)::after{content:"";flex:1;height:2px;background:var(--line);
+  border-radius:2px;margin-left:4px}
+.wz-track li.done:not(:last-child)::after{background:var(--blue);opacity:.45}
+.wz-dot{width:30px;height:30px;flex:none;border-radius:99px;display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  background:var(--surface-2);color:var(--muted);border:1.5px solid var(--line)}
+.wz-lbl{font-family:var(--font-display);font-weight:700;font-size:13.5px;color:var(--muted)}
+.wz-track li.current .wz-dot{background:var(--blue);border-color:var(--blue);color:#fff}
+.wz-track li.current .wz-lbl{color:var(--text)}
+.wz-track li.done .wz-dot{background:rgba(47,139,255,.14);border-color:var(--blue);color:var(--blue)}
+.wz-track li.done .wz-lbl{color:var(--blue)}
+@media (max-width:620px){.wz-lbl{display:none}.wz-track{gap:6px}}
+
+.wz-step{display:none}
+.wz-step.active{display:block}
+.wz-step h2{font-size:24px;margin-bottom:6px}
+.wz-step > .lede{color:var(--muted);font-size:15.5px;margin-bottom:24px}
+.wz-actions{display:flex;gap:12px;margin-top:8px}
+.wz-actions .btn{flex:1;justify-content:center}
+.wz-actions .btn.back{flex:0 0 auto}
+@media (max-width:480px){.wz-actions .btn{font-size:14px;padding:13px 16px}}
+
+/* Plan picker — the pricing cards, made selectable. */
+.pickers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+@media (max-width:640px){.pickers{grid-template-columns:1fr}}
+.pick{position:relative;display:block;cursor:pointer;background:var(--bg);border:1.5px solid var(--line);
+  border-radius:var(--radius);padding:22px;transition:border-color .15s ease,box-shadow .15s ease}
+.pick:hover{border-color:var(--blue)}
+.pick input{position:absolute;opacity:0;width:1px;height:1px}
+.pick .tick{position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:99px;
+  border:1.5px solid var(--line);background:var(--card);display:grid;place-items:center;color:transparent}
+.pick.sel{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,139,255,.16)}
+.pick.sel .tick{background:var(--blue);border-color:var(--blue);color:#fff}
+.pick:focus-within{outline:3px solid var(--cyan);outline-offset:2px}
+.pick h3{font-size:18px;padding-right:30px}
+.pick .amt{font-family:var(--font-display);font-weight:800;font-size:32px;margin:8px 0 2px;letter-spacing:-.02em}
+.pick .amt small{font-size:14px;color:var(--muted);font-weight:600}
+.pick .setup{color:var(--muted);font-size:13.5px}
+.pick ul{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px}
+.pick li{display:flex;gap:9px;font-size:14.5px;color:var(--muted)}
+.pick li svg{color:var(--blue);flex:none;margin-top:3px}
+
+/* Review line shown above the plan picker once details are filled in. */
+.wz-recap{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:13px 16px;margin-bottom:20px;font-size:14.5px}
+.wz-recap b{font-family:var(--font-display)}
+.wz-recap button{background:none;border:0;color:var(--blue);font-family:var(--font-display);
+  font-weight:700;font-size:14px;cursor:pointer;padding:0;text-decoration:underline}
+
+/* ---------- payment toast / modal ---------- */
+.pay-modal{border:0;padding:0;background:transparent;max-width:460px;width:calc(100% - 32px);
+  color:var(--text);overflow:visible}
+.pay-modal::backdrop{background:rgba(6,11,24,.62);backdrop-filter:blur(3px)}
+.pay-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px 28px;box-shadow:var(--shadow-lg);text-align:center;position:relative}
+.pay-card .close{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:99px;border:0;
+  background:var(--surface);color:var(--muted);cursor:pointer;font-size:19px;line-height:1;display:grid;place-items:center}
+.pay-card .close:hover{background:var(--surface-2);color:var(--text)}
+.pay-badge{width:52px;height:52px;margin:0 auto 16px;border-radius:99px;display:grid;place-items:center;
+  background:linear-gradient(160deg,#2f8bff,#0a4bc4);color:#fff}
+.pay-card h2{font-size:21px;margin-bottom:8px}
+.pay-card .sub{color:var(--muted);font-size:15px;margin-bottom:20px}
+.pay-total{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:16px 18px;margin-bottom:20px;text-align:left}
+.pay-total .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px}
+.pay-total .row + .row{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.pay-total .row span{color:var(--muted)}
+.pay-total .row b{font-family:var(--font-display);font-size:17px}
+.pay-total .row b.big{font-size:22px}
+.pay-ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--muted);
+  letter-spacing:.06em;margin-top:14px}
+.pay-ref b{color:var(--text)}
+.pay-modal .btn{width:100%;justify-content:center}
+.btn-paypal{background:#ffc439;color:#0c2e5c;border-color:#eab308}
+.btn-paypal:hover{background:#ffb400;transform:translateY(-2px)}
+/* PayPal renders its own button into #payButtons; give it room to breathe and
+   keep it from inheriting the card's centred text. */
+#payButtons{min-height:0;text-align:left}
+#payButtons:not(:empty){margin-bottom:4px}
+.pay-loading{color:var(--muted);font-size:14px;padding:14px 0}
+.pay-loading::after{content:"";display:inline-block;width:12px;height:12px;margin-left:8px;
+  vertical-align:-2px;border:2px solid var(--line);border-top-color:var(--blue);
+  border-radius:99px;animation:cw-spin .8s linear infinite}
+@keyframes cw-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.pay-loading::after{animation:none}}
+.pay-done{display:inline-block;margin-top:14px;font-family:var(--font-display);font-weight:700;
+  font-size:14px;color:var(--blue)}
+.pay-done:hover{text-decoration:underline}
+.pay-fine{font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.55}
+.pay-fine a{color:var(--blue);font-weight:600}
+/* Older browsers without <dialog>: shown as a fixed overlay instead. */
+.pay-modal.fallback{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:400;display:none}
+.pay-modal.fallback[open]{display:block}
+.pay-scrim{position:fixed;inset:0;background:rgba(6,11,24,.62);z-index:399;display:none}
+.pay-scrim.show{display:block}
+
+/* ---------- thank-you ---------- */
+.ty-card{max-width:620px;margin:0 auto;text-align:center;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:44px 36px;box-shadow:var(--shadow-sm)}
+.ty-card .pay-badge{width:62px;height:62px}
+.ty-card h1{font-size:clamp(26px,4vw,34px);margin-bottom:12px}
+.ty-card > p{color:var(--muted);font-size:16.5px}
+.ty-next{text-align:left;margin:28px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:16px}
+.ty-next li{display:flex;gap:14px}
+.ty-next .n{width:28px;height:28px;flex:none;border-radius:99px;background:rgba(47,139,255,.14);color:var(--blue);
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:13px}
+.ty-next h3{font-size:16px;margin-bottom:2px}
+.ty-next p{color:var(--muted);font-size:14.5px}
+@media (max-width:520px){.ty-card{padding:32px 22px}}
 
 /* ---------- CTA band ---------- */
 .cta-band{position:relative;overflow:hidden;color:#eaf1fb;text-align:center;
