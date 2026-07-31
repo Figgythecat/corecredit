@@ -424,10 +424,18 @@ ol.wz-track{display:flex;align-items:center;gap:8px;margin:0 0 26px;padding:0;li
 .wz-step.active{display:block}
 .wz-step h2{font-size:24px;margin-bottom:6px}
 .wz-step > .lede{color:var(--muted);font-size:15.5px;margin-bottom:24px}
-.wz-actions{display:flex;gap:12px;margin-top:8px}
-.wz-actions .btn{flex:1;justify-content:center}
+/* Two buttons in a row. `form.cw .btn` sets width:100% for the usual
+   one-button-per-form case, which has to be undone here — combined with
+   flex:0 0 auto on Back it made Back refuse to shrink below full width and
+   pushed Continue outside the card. */
+.wz-actions{display:flex;gap:12px;margin-top:8px;align-items:stretch}
+.wz-actions .btn{width:auto;flex:1 1 auto;justify-content:center}
 .wz-actions .btn.back{flex:0 0 auto}
-@media (max-width:480px){.wz-actions .btn{font-size:14px;padding:13px 16px}}
+/* Stacked on small screens, primary action on top. */
+@media (max-width:520px){
+  .wz-actions{flex-direction:column-reverse}
+  .wz-actions .btn,.wz-actions .btn.back{width:100%;flex:0 0 auto}
+}
 
 /* Plan picker — the pricing cards, made selectable. */
 .pickers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
