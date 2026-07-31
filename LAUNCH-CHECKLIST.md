@@ -332,10 +332,46 @@ from anyone else who finds the URL. Don't treat those as confirmation of payment
 
 Much simpler on PHP hosting than on Cloudflare — no API tokens, no environment variables.
 
-**⚠️ Your cPanel currently shows `Email Accounts: 0`** — so `forms@corewavecredit.com`
-does not exist yet. Sending "from" an address with no mailbox behind it is a fast route
-to the spam folder, and some hosts reject it outright. Create it first:
-*cPanel → Email Accounts → Create* (or make it a forwarder pointing at your Gmail).
+### Two addresses, and only one of them is a destination
+
+Everything the site sends **lands in `Webshowmedia@gmail.com`**. That's already set in
+both `contact.php` and `cw-config.php` and needs no change.
+
+`forms@corewavecredit.com` is the **From:** line — nothing is delivered to it, and it
+cannot be changed to your Gmail address. Your server at `216.172.171.98` isn't
+authorised to send as `@gmail.com`, so SPF would fail and Gmail treats mail claiming to
+be from a Gmail address but arriving from an unrelated server as forged. It goes to
+spam, or is refused. Sending as `@corewavecredit.com` passes, because your SPF record
+names that server.
+
+Replies aren't affected either way: the code sets `Reply-To` to the visitor's own
+address, so hitting **Reply** in Gmail answers the customer.
+
+### Make forms@ land in your Gmail too
+
+**Do not create a cPanel mailbox for it.** Your MX records point at Namecheap
+(`eforward1-5.registrar-servers.com`), so mail for the domain never reaches cPanel — a
+cPanel mailbox would just sit there empty and confuse things. Add a forwarder where the
+mail actually goes:
+
+*Namecheap → Domain List → Manage → **Email Forwarding** → Add Forwarder*
+
+| Alias | Forwards to |
+|---|---|
+| `forms` | `Webshowmedia@gmail.com` |
+
+That's it — bounces and any stray replies land in the same Gmail, and there's no second
+mailbox to check. While you're there, tell cPanel not to try delivering the domain's
+mail itself: *cPanel → Email Routing → corewavecredit.com → **Remote Mail Exchanger***.
+
+### ✅ SPF is already fixed (verified 2026-07-30)
+
+`corewavecredit.com` publishes
+`v=spf1 ip4:216.172.171.98 include:spf.efwd.registrar-servers.com ~all` — the hosting
+server is authorised and your Namecheap forwarding still works. Nothing to do.
+
+There is **no DMARC record**. Not required, and not worth adding until you've confirmed
+mail is arriving reliably — a wrong policy silently bins your own leads.
 
 1. Open `site/contact.php` and set the two values at the top:
    - `$CONTACT_TO` — where enquiries should land (e.g. `webshowmedia@gmail.com`)

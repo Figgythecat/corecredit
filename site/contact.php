@@ -10,8 +10,14 @@
  */
 
 // ---- configuration -------------------------------------------------------
-$CONTACT_TO   = 'webshowmedia@gmail.com';       // TODO:EMAIL — where enquiries land
-$CONTACT_FROM = 'forms@corewavecredit.com';     // must be on your hosting's domain
+// WHERE THE EMAIL LANDS. The one that matters.
+$CONTACT_TO   = 'webshowmedia@gmail.com';
+
+// WHO IT APPEARS TO BE FROM — not a destination, nothing is delivered here.
+// This cannot be a gmail.com address: the server isn't authorised to send as
+// Gmail, so SPF fails and the message gets binned as forged. Replies go to the
+// visitor instead, via the Reply-To header set below.
+$CONTACT_FROM = 'forms@corewavecredit.com';
 // --------------------------------------------------------------------------
 
 header('Content-Type: application/json');
